@@ -15,8 +15,23 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
+from portfolio import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/projects/', views.project_list, name='project-list'),
+    path('api/projects/<int:pk>/', views.project_detail, name='project-detail'),
+
+    # Skill endpoints
+    path('api/skills/', views.skill_list, name='skill-list'),
+    path('api/skills/<int:pk>/', views.skill_detail, name='skill-detail'),
+    # Quiz app API
+    path('api/quiz/', include('quiz.urls')),
 ]
+
+# Serve media files during development
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
